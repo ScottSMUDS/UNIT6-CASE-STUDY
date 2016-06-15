@@ -1,0 +1,133 @@
+---
+title: "Unit6 Case Study"
+author: "Marvin Scott"
+date: "June 12, 2016"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### INTRODUCTION
+The objective of this document is to illustrate via R programming  the data munging and analytical processes invloved between datasets listed below
+
+#####        * (1)GDP Rank
+#####        * (2)Ed Stats
+
+### DOWNLOAD PROCESS
+#####        * (1)GDP Rank
+######LOAD FILE INTO WORKSPACE AFTER SAVING INTO DIRECTORY 
+gross <-read.csv("GDP.csv", stringsAsFactors = FALSE, skip= 5, nrows = 231,  header  =FALSE)
+
+#####        * (2)Ed Stats
+######LOAD FILE INTO WORKSPACE AFTER SAVING INTO DIRECTORY 
+edstat <-read.csv("Edstats_Country.csv", stringsAsFactors = TRUE,   header  =TRUE)
+
+### TIDYING PROCESS
+#####        * (1)GDP Rank
+######NAME vARIBLES
+names(gross)<- c("COUNTRYCODE", "RANKING", "JUNK1", "ECONOMY","US_DOLLARS_MILLIONS", "JUNK2", "JUNK3", "JUNK4", "JUNK5", "JUNK6")
+
+######OBSERVE DATA TYPES ANS VALUES
+str(gross)
+
+######LOAD PACKAGES
+library(plyr)
+library(dplyr)
+
+######SPECIFIY VARIABLE SELECTION REQ'D FOR ANALYSIS
+grossx<-select(gross, COUNTRYCODE,RANKING, ECONOMY , US_DOLLARS_MILLIONS)
+
+######CHANGE DATA TYPE TO "FACTOR"
+grossx$COUNTRYCODE<-as.factor(grossx$COUNTRYCODE)
+
+######CHANGE DATA TYPE TO "FACTOR"
+grossx$ECONOMY<-as.factor(grossx$ECONOMY)
+
+######CHECK MISSING VALUES/NAs
+summary(grossx)
+
+######CHECK NAs 
+count(is.na(grossx$RANKING))
+count(is.na(grossx$US_DOLLARS_MILLIONS))
+
+#####        * (2)Ed Stats
+
+######OBSERVE DATA TYPES ANS VALUES
+str(grossx)
+
+######NAME vARIBLES
+names(edstat)[2]<- "SHORTNAME"
+names(edstat)[9]<- "INCOMEGROUP"
+names(edstat)[1]<- "COUNTRYCODE"
+
+######SPECIFIY VARIABLE SELECTION REQ'D FOR ANALYSIS
+edstat_gdp<-select(edstat, COUNTRYCODE,SHORTNAME, INCOMEGROUP)
+
+######CHECK MISSING VALUES/NAs
+str(edstat_gdp)
+summary(edstat_gdp)
+
+### MERGING PROCESS FOR (1) GDP Rank & (2)Ed Stats DATASETS
+######MERGE DATA BY "**COUNTRYCODE**"
+mergedata1<-merge(x=edstat_gdp, y= grossx , by = "COUNTRYCODE", all= TRUE)
+head(mergedata1)
+
+### CODE PURPOSE
+
+```{r}
+gross <-read.csv("GDP.csv", stringsAsFactors = FALSE, skip= 5, nrows = 231,  header  =FALSE)
+######LOAD FILE INTO WORKSPACE AFTER SAVING INTO DIRECTORY 
+edstat <-read.csv("Edstats_Country.csv", stringsAsFactors = TRUE,   header  =TRUE)
+######NAME vARIBLES
+names(gross)<- c("COUNTRYCODE", "RANKING", "JUNK1", "ECONOMY","US_DOLLARS_MILLIONS", "JUNK2", "JUNK3", "JUNK4", "JUNK5", "JUNK6")
+######OBSERVE DATA TYPES ANS VALUES
+str(gross)
+######LOAD PACKAGES
+library(plyr)
+library(dplyr)
+######SPECIFIY VARIABLE SELECTION REQ'D FOR ANALYSIS
+grossx<-select(gross, COUNTRYCODE,RANKING, ECONOMY , US_DOLLARS_MILLIONS)
+######CHANGE DATA TYPE TO "FACTOR"
+grossx$COUNTRYCODE<-as.factor(grossx$COUNTRYCODE)
+######CHANGE DATA TYPE TO "FACTOR"
+grossx$ECONOMY<-as.factor(grossx$ECONOMY)
+######CHECK MISSING VALUES/NAs
+summary(grossx)
+
+
+######CHECK NAs 
+######count(is.na(grossx$RANKING))
+######count(is.na(grossx$US_DOLLARS_MILLIONS))
+
+######OBSERVE DATA TYPES ANS VALUES
+str(grossx)
+######NAME vARIBLES
+names(edstat)[2]<- "SHORTNAME"
+names(edstat)[9]<- "INCOMEGROUP"
+names(edstat)[1]<- "COUNTRYCODE"
+######SPECIFIY VARIABLE SELECTION REQ'D FOR ANALYSIS
+edstat_gdp<-select(edstat, COUNTRYCODE,SHORTNAME, INCOMEGROUP)
+######CHECK MISSING VALUES/NAs
+str(edstat_gdp)
+summary(edstat_gdp)
+
+### MERGING PROCESS FOR (1) GDP Rank & (2)Ed Stats DATASETS
+######MERGE DATA BY "**COUNTRYCODE**"
+mergedata1<-merge(x=edstat_gdp, y= grossx , by = "COUNTRYCODE", all= TRUE)
+head(mergedata1)
+
+
+
+```
+
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
